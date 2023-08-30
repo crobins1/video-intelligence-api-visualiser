@@ -10,13 +10,13 @@ video_client = videointelligence.VideoIntelligenceServiceClient.from_service_acc
     "YOUR SERVICE ACCOUNT FILE.json")
 
 features = [
-    videointelligence.Feature.OBJECT_TRACKING,
-    videointelligence.Feature.LABEL_DETECTION,
+    # videointelligence.Feature.OBJECT_TRACKING,
+    # videointelligence.Feature.LABEL_DETECTION,
     videointelligence.Feature.SHOT_CHANGE_DETECTION,
     videointelligence.Feature.SPEECH_TRANSCRIPTION,
-    videointelligence.Feature.LOGO_RECOGNITION,
+    # videointelligence.Feature.LOGO_RECOGNITION,
     videointelligence.Feature.EXPLICIT_CONTENT_DETECTION,
-    videointelligence.Feature.TEXT_DETECTION,
+    # videointelligence.Feature.TEXT_DETECTION,
     videointelligence.Feature.FACE_DETECTION,
     videointelligence.Feature.PERSON_DETECTION
 ]
