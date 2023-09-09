@@ -191,9 +191,10 @@
                     href="https://crobins1.github.io/video-intelligence-api-visualiser/blob/main/run_video_intelligence.py">here</a>
                 if you want to run all features at once.
             </p>
-
+        
             <p>This app <b><u>doesn't</u></b> send or store any of your video or annotation data. It just visualises
                 local data files.</p>
+            
             <div class="upload-area" ondrop="drop_video(event)" ondragover="drag_enter(event)">
                 <p>Your video</p>
                 <input id="video_input" type="file" accept="video/*" />
@@ -202,7 +203,14 @@
                 <p>Your .json</p>
                 <input id="json_input" type="file" accept="application/JSON" />
             </div>
+            
+            <div id="url-input-container">
+                <input type="text" id="video_url_input" placeholder="Paste video URL here" />
+                <input type="text" id="json_url_input" placeholder="Paste JSON URL here" />
+                <button onclick="loadResourcesFromURL()">Load Resources</button>
+            </div>
         </div>
+
 
         <div v-if="data_misaligned" class="data-warning">
             It looks like the json data dosn't align with the video file, are you sure you have all of the right files
@@ -489,6 +497,31 @@ Find links to script examples at the top right of the screen.")
 
         }
 
+    function isValidURL(string) {
+      try {
+        new URL(string);
+        return true;
+      } catch (_) {
+        return false;  
+      }
+    }
+    
+    function loadResourcesFromURL() {
+        const videoURL = document.getElementById('video_url_input').value;
+        const jsonURL = document.getElementById('json_url_input').value;
+    
+        if (videoURL && isValidURL(videoURL)) {
+            load_video_from_url(videoURL);
+        } else {
+            alert("Invalid video URL");
+        }
+    
+        if (jsonURL && isValidURL(jsonURL)) {
+            load_json_from_url(jsonURL);
+        } else {
+            alert("Invalid JSON URL");
+        }
+    }
 
 
     </script>
