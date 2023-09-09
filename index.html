@@ -204,12 +204,13 @@
                 <input id="json_input" type="file" accept="application/JSON" />
             </div>
             
-            <div id="url-input-container">
-                <input type="text" id="video_url_input" placeholder="Paste video URL here" />
-                <input type="text" id="json_url_input" placeholder="JSON URL PASTE " />
-                <button onclick="loadResourcesFromURL()">Load Resources</button>
+        <div id="url-input-container">
+            <input type="text" id="video_url_input" placeholder="Paste video URL here" />
+            <button onclick="loadVideoFromURL()">Load Video</button>
+            <input type="text" id="json_url_input" placeholder="Paste JSON URL here" />
+            <button onclick="loadJSONFromURL()">Load JSON</button>
+        </div>
 
-            </div>
         </div>
 
 
@@ -403,8 +404,22 @@
             return json
         }
 
-        function load_video_from_url(url) {
-            video.src = url
+        function loadVideoFromURL() {
+            const videoURL = document.getElementById('video_url_input').value;
+            if (videoURL && isValidURL(videoURL)) {
+                load_video_from_url(videoURL);
+            } else {
+                alert("Invalid video URL");
+            }
+        }
+        
+        function loadJSONFromURL() {
+            const jsonURL = document.getElementById('json_url_input').value;
+            if (jsonURL && isValidURL(jsonURL)) {
+                load_json_from_url(jsonURL);
+            } else {
+                alert("Invalid JSON URL");
+            }
         }
 
         function load_video_dragged(event) {
@@ -421,11 +436,11 @@
                 'dataType': "json",
                 'success': function (data) {
                     console.log("JSON data retrieved: ", data);
-                    app.json_data = {};
+                    app.json_data = {}; // Clear the existing data
                     Vue.nextTick(() => {
-                        app.json_data = data;  // This will force a refresh of all computed properties in Vue
+                        app.json_data = data;  // Update with new data
+                        console.log('JSON data successfully loaded and updated');
                     });
-        
                     console.log('keys ->>', Object.keys(data));
                 },
                 'error': function (jqXHR, textStatus, errorThrown) {
