@@ -414,38 +414,25 @@
         }
 
         function load_json_from_url(url) {
-            console.log("Attempting to load JSON from: ", url);  // Log to check if function is called
-            var json = null;
+            console.log("Attempting to load JSON from: ", url); // Log to check if function is called
             $.ajax({
-                'async': false,
+                'async': true, // Make it asynchronous
                 'url': url,
                 'dataType': "json",
                 'success': function (data) {
-                    json = data;
-                    console.log("JSON data retrieved: ", json);  // Log to check if data is retrieved
+                    console.log("JSON data retrieved: ", data); // Log to check if data is retrieved
+                    app.json_data = data; // Set the data directly here
+        
+                    // Validate the JSON format and log the keys
+                    console.log('keys ->>', Object.keys(data));
+                    if (!('annotation_results' in data)) {
+                        alert("❌ Format of json is not compatible, make sure you are setting the 'output_uri' configuration when calling the Video Intelligence API so that it outputs a .json file direction to Google Cloud Storage. Find links to script examples at the top right of the screen.");
+                    }
                 },
-                'error': function (jqXHR, textStatus, errorThrown) {  // Error handling for AJAX request
+                'error': function (jqXHR, textStatus, errorThrown) { // Error handling for AJAX request
                     console.error("Failed to load JSON data: ", textStatus, errorThrown);
                 }
             });
-            json_data = json;
-        
-            console.log(json_data);
-            app.json_data = json_data;
-        
-            console.log('keys ->>', Object.keys(json_data));
-            // check validity of json
-            if (!('annotation_results' in json_data)) {
-                alert("❌ Format of json is not compatible, make sure you are setting the 'output_uri' \
-configuration when calling the Video Intelligence API so that it \
-outputs a .json file direction to Google Cloud Storage. \
-Find links to script examples at the top right of the screen.")
-
-                json_input.value = null
-            }
-
-
-
         }
 
         function load_json_dragged(event) {
