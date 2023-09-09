@@ -415,8 +415,7 @@
         }
 
         function load_json_from_url(url) {
-            console.log("load_json_from_url called with URL: ", url);
-            app.json_data = {};  // Clear previous data
+            console.log("Attempting to load JSON from: ", url); // Log to check if function is called
             $.ajax({
                 'async': true, // Make it asynchronous
                 'url': url,
@@ -424,7 +423,7 @@
                 'success': function (data) {
                     console.log("JSON data retrieved: ", data); // Log to check if data is retrieved
                     app.json_data = data; // Set the data directly here
-        
+            
                     // Validate the JSON format and log the keys
                     console.log('keys ->>', Object.keys(data));
                     if (!('annotation_results' in data)) {
@@ -436,6 +435,7 @@
                 }
             });
         }
+
 
         function load_json_dragged(event) {
             const file = this.files[0]
@@ -516,6 +516,7 @@
             alert("Invalid JSON URL");
         }
     }
+
 
 
     </script>
