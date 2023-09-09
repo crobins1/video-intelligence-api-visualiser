@@ -414,21 +414,26 @@
         }
 
         function load_json_from_url(url) {
-            var json = null
+            console.log("Attempting to load JSON from: ", url);  // Log to check if function is called
+            var json = null;
             $.ajax({
                 'async': false,
                 'url': url,
                 'dataType': "json",
                 'success': function (data) {
-                    json = data
+                    json = data;
+                    console.log("JSON data retrieved: ", json);  // Log to check if data is retrieved
+                },
+                'error': function (jqXHR, textStatus, errorThrown) {  // Error handling for AJAX request
+                    console.error("Failed to load JSON data: ", textStatus, errorThrown);
                 }
-            })
-            json_data = json
-
-            console.log(json_data)
-            app.json_data = json_data
-
-            console.log('keys ->>', Object.keys(json_data))
+            });
+            json_data = json;
+        
+            console.log(json_data);
+            app.json_data = json_data;
+        
+            console.log('keys ->>', Object.keys(json_data));
             // check validity of json
             if (!('annotation_results' in json_data)) {
                 alert("❌ Format of json is not compatible, make sure you are setting the 'output_uri' \
