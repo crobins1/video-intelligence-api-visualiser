@@ -208,6 +208,7 @@
                 <input type="text" id="video_url_input" placeholder="Paste video URL here" />
                 <input type="text" id="json_url_input" placeholder="Paste JSON URL here" />
                 <button onclick="loadResourcesFromURL()">Load Resources</button>
+
             </div>
         </div>
 
@@ -414,7 +415,8 @@
         }
 
         function load_json_from_url(url) {
-            console.log("Attempting to load JSON from: ", url); // Log to check if function is called
+            console.log("load_json_from_url called with URL: ", url);
+            app.json_data = {};  // Clear previous data
             $.ajax({
                 'async': true, // Make it asynchronous
                 'url': url,
