@@ -415,25 +415,42 @@
         }
 
         function load_json_from_url(url) {
-            console.log("Attempting to load JSON from: ", url); // Log to check if function is called
+            console.log("Attempting to load JSON from: ", url);
             $.ajax({
-                'async': true, // Make it asynchronous
+                'async': true,
                 'url': url,
                 'dataType': "json",
                 'success': function (data) {
-                    console.log("JSON data retrieved: ", data); // Log to check if data is retrieved
-                    app.json_data = data; // Set the data directly here
-            
-                    // Validate the JSON format and log the keys
+                    console.log("JSON data retrieved: ", data);
+                    app.json_data = data; // Update the json_data in the Vue instance
+        
+                    // After updating the json_data, refresh other dependent data in the Vue instance
+                    app.detected_features = calculateDetectedFeatures(data);
+                    app.data_misaligned = checkDataAlignment(data);
                     console.log('keys ->>', Object.keys(data));
-                    if (!('annotation_results' in data)) {
-                        alert("❌ Format of json is not compatible, make sure you are setting the 'output_uri' configuration when calling the Video Intelligence API so that it outputs a .json file direction to Google Cloud Storage. Find links to script examples at the top right of the screen.");
-                    }
                 },
-                'error': function (jqXHR, textStatus, errorThrown) { // Error handling for AJAX request
+                'error': function (jqXHR, textStatus, errorThrown) {
                     console.error("Failed to load JSON data: ", textStatus, errorThrown);
                 }
             });
+        }
+        
+        function calculateDetectedFeatures(data) {
+            var features = [];
+            if (data && data.annotation_results) {
+                data.annotation_results.forEach(annotations => {
+                    features = features.concat(Object.keys(annotations));
+                });
+            }
+            return features;
+        }
+        
+        function checkDataAlignment(data) {
+            if (data && data.annotation_results) {
+                const delta = app.video_info.length - data.annotation_results[0].segment.end_time_offset.seconds;
+                return Math.abs(delta) > 2;
+            }
+            return false;
         }
 
 
