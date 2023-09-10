@@ -3,7 +3,7 @@
 
 <head>
 
-    <title>O.U.R. Video Intelligence API Visualiser</title>
+    <title>Video Intelligence API Visualiser</title>
     <link rel="icon" type="image/png" href="assets/icon.png" />
 
     <meta name="description" content="Interactive visualiser for the Google Cloud Video Intelligence API.">
@@ -184,17 +184,16 @@
 
 
         <div id="upload-data">
-            <h5>Try with your Video or Audio</h5>
+            <h5>Try with your data</h5>
             <p>You can analyse a video by following the instructions <a target="_blank"
                     href="https://cloud.google.com/video-intelligence-storage-trigger">here</a>.
                 Also see the script <a target="_blank"
-                    href="https://crobins1.github.io/video-intelligence-api-visualiser/blob/main/run_video_intelligence.py">here</a>
+                    href="https://github.com/ZackAkil/video-intelligence-api-visualiser/blob/main/run_video_intelligence.py">here</a>
                 if you want to run all features at once.
             </p>
-        
+
             <p>This app <b><u>doesn't</u></b> send or store any of your video or annotation data. It just visualises
                 local data files.</p>
-            
             <div class="upload-area" ondrop="drop_video(event)" ondragover="drag_enter(event)">
                 <p>Your video</p>
                 <input id="video_input" type="file" accept="video/*" />
@@ -203,16 +202,7 @@
                 <p>Your .json</p>
                 <input id="json_input" type="file" accept="application/JSON" />
             </div>
-            
-        <div id="url-input-container">
-            <input type="text" id="video_url_input" placeholder="Paste video URL here" />
-            <button onclick="loadVideoFromURL()">Load Video</button>
-            <input type="text" id="json_url_input" placeholder="Paste JSON URL here" />
-            <button onclick="loadJSONFromURL()">Load JSON</button>
         </div>
-
-        </div>
-
 
         <div v-if="data_misaligned" class="data-warning">
             It looks like the json data dosn't align with the video file, are you sure you have all of the right files
@@ -360,15 +350,16 @@
             },
             computed: {
                 data_misaligned: function () {
-                    console.log('delt');
-                    if (this.json_data && this.json_data.annotation_results) {
-                        const delta = this.video_info.length - this.json_data.annotation_results[0].segment.end_time_offset.seconds;
-                        console.log('delt', delta);
-                        if (Math.abs(delta) > 2) {
-                            return true;
+                    console.log('delt')
+                    if (this.json_data)
+                        if (this.json_data.annotation_results) {
+                            const delta = this.video_info.length - this.json_data.annotation_results[0].segment.end_time_offset.seconds
+                            console.log('delt', delta)
+                            if (Math.abs(delta) > 2) {
+                                return true
+                            }
                         }
-                    }
-                    return false;
+                    return false
                 },
                 detected_features: function () {
 
@@ -404,22 +395,8 @@
             return json
         }
 
-        function loadVideoFromURL() {
-            const videoURL = document.getElementById('video_url_input').value;
-            if (videoURL && isValidURL(videoURL)) {
-                load_video_from_url(videoURL);
-            } else {
-                alert("Invalid video URL");
-            }
-        }
-        
-        function loadJSONFromURL() {
-            const jsonURL = document.getElementById('json_url_input').value;
-            if (jsonURL && isValidURL(jsonURL)) {
-                load_json_from_url(jsonURL);
-            } else {
-                alert("Invalid JSON URL");
-            }
+        function load_video_from_url(url) {
+            video.src = url
         }
 
         function load_video_dragged(event) {
@@ -429,45 +406,34 @@
         }
 
         function load_json_from_url(url) {
-            console.log("Attempting to load JSON from: ", url);
+            var json = null
             $.ajax({
-                'async': true,
+                'async': false,
                 'url': url,
                 'dataType': "json",
                 'success': function (data) {
-                    console.log("JSON data retrieved: ", data);
-                    app.json_data = {}; // Clear the existing data
-                    Vue.nextTick(() => {
-                        app.json_data = data;  // Update with new data
-                        console.log('JSON data successfully loaded and updated');
-                    });
-                    console.log('keys ->>', Object.keys(data));
-                },
-                'error': function (jqXHR, textStatus, errorThrown) {
-                    console.error("Failed to load JSON data: ", textStatus, errorThrown);
+                    json = data
                 }
-            });
-        }
+            })
+            json_data = json
 
-        
-        function calculateDetectedFeatures(data) {
-            var features = [];
-            if (data && data.annotation_results) {
-                data.annotation_results.forEach(annotations => {
-                    features = features.concat(Object.keys(annotations));
-                });
-            }
-            return features;
-        }
-        
-        function checkDataAlignment(data) {
-            if (data && data.annotation_results) {
-                const delta = app.video_info.length - data.annotation_results[0].segment.end_time_offset.seconds;
-                return Math.abs(delta) > 2;
-            }
-            return false;
-        }
+            console.log(json_data)
+            app.json_data = json_data
 
+            console.log('keys ->>', Object.keys(json_data))
+            // check validity of json
+            if (!('annotation_results' in json_data)) {
+                alert("❌ Format of json is not compatible, make sure you are setting the 'output_uri' \
+configuration when calling the Video Intelligence API so that it \
+outputs a .json file direction to Google Cloud Storage. \
+Find links to script examples at the top right of the screen.")
+
+                json_input.value = null
+            }
+
+
+
+        }
 
         function load_json_dragged(event) {
             const file = this.files[0]
@@ -522,32 +488,6 @@
             }
 
         }
-
-    function isValidURL(string) {
-      try {
-        new URL(string);
-        return true;
-      } catch (_) {
-        return false;  
-      }
-    }
-    
-    function loadResourcesFromURL() {
-        const videoURL = document.getElementById('video_url_input').value;
-        const jsonURL = document.getElementById('json_url_input').value;
-    
-        if (videoURL && isValidURL(videoURL)) {
-            load_video_from_url(videoURL);
-        } else {
-            alert("Invalid video URL");
-        }
-    
-        if (jsonURL && isValidURL(jsonURL)) {
-            load_json_from_url(jsonURL);
-        } else {
-            alert("Invalid JSON URL");
-        }
-    }
 
 
 
