@@ -33,130 +33,159 @@
     </script>
 
 
-    <style>
-        body {
-            text-align: center;
-            min-height: 1500px;
-            min-width: 1130px;
-        }
+<style>
+    body {
+        text-align: center;
+        min-height: 1500px;
+        min-width: 1130px;
+        background-color: #ffffff; /* Light background */
+        color: #5d5d5d; /* Dark text */
+    }
 
-        h1,
-        h2,
-        h3,
-        h4,
-        h5 {
-            color: #5d5d5d;
-        }
+    h1, h2, h3, h4, h5 {
+        color: #5d5d5d;
+    }
 
-        #video-conatiner {
+    #video-conatiner {
+        position: relative;
+        width: 800px;
+        margin: 15px;
+        display: inline-block;
+    }
 
-            position: relative;
-            width: 800px;
-            margin: 15px;
-            display: inline-block;
-        }
+    #video-conatiner > canvas {
+        width: 100%;
+        position: absolute;
+        opacity: 0.8;
+        left: 0;
+        height: 100%;
+        pointer-events: none;
+    }
 
-        #video-conatiner>canvas {
-            width: 100%;
-            position: absolute;
-            opacity: 0.8;
-            left: 0;
-            height: 100%;
-            pointer-events: none;
-        }
+    video {
+        width: 100%;
+        margin: auto;
+        display: block;
+    }
 
-        video {
-            width: 100%;
-            margin: auto;
-            display: block;
-        }
+    video::-webkit-media-controls-fullscreen-button {
+        display: none !important;
+    }
 
-        video::-webkit-media-controls-fullscreen-button {
-            display: none !important;
-        }
+    .mdl-layout__header {
+        background-color: rgb(255, 255, 255);
+        color: #5d5d5d;
+        font-weight: 100;
+    }
 
-        .mdl-layout__header {
-            background-color: rgb(255 255 255);
-            color: #5d5d5d;
-            font-weight: 100;
-        }
+    #upload-data {
+        display: inline-block;
+        text-align: center;
+        vertical-align: top;
+        width: 250px;
+    }
 
-        #upload-data {
-            display: inline-block;
-            text-align: center;
-            vertical-align: top;
-            width: 250px;
-        }
+    #upload-data > p {
+        text-align: justify;
+    }
 
-        #upload-data>p {
-            text-align: justify;
-        }
+    .feature-tabs {
+        margin: 30px;
+        text-align: center;
+    }
 
-        .feature-tabs {
-            margin: 30px;
-            text-align: center;
-        }
+    .feature-tabs > div {
+        display: inline-block;
+        font-size: 1.2em;
+        padding: 12px;
+        cursor: pointer;
+        color: #777777;
+        font-weight: 300;
+        border: solid #4285f4 1px;
+        border-radius: 5px;
+        margin: 5px;
+    }
 
-        .feature-tabs>div {
-            display: inline-block;
-            font-size: 1.2em;
-            padding: 12px;
-            cursor: pointer;
-            color: #777777;
-            font-weight: 300;
+    .feature-tabs > div:hover {
+        background-color: #4285f41a;
+    }
 
-            border: solid #4285f4 1px;
-            border-radius: 5px;
-            margin: 5px;
-        }
+    .feature-tabs > .selected {
+        border-bottom: 2px solid #4285F4;
+    }
 
-        .feature-tabs>div:hover {
-            background-color: #4285f41a;
-        }
+    .feature-tabs > .disabled {
+        color: #cdcdcd;
+    }
 
+    .logo {
+        width: inherit;
+    }
 
-        .feature-tabs>.selected {
-            border-bottom: 2px solid #4285F4;
-        }
+    .upload-area {
+        width: 200px;
+        border: dashed #ededed 3px;
+        border-radius: 5px;
+        padding: 15px;
+        margin: 15px;
+        overflow: hidden;
+    }
 
-        .feature-tabs>.disabled {
-            color: #cdcdcd;
-        }
+    .data-warning {
+        background-color: #ffffc3;
+        margin: auto;
+        position: relative;
+        padding: 15px;
+        text-align: center;
+    }
 
-        .logo {
-            width: inherit;
-        }
+    .material-icons {
+        vertical-align: middle;
+        font-size: 19px;
+    }
 
-        .upload-area {
+    .nav-tab > .material-icons {
+        color: #0F9D58;
+    }
 
-            /* display: inline-block; */
-            width: 200px;
-            /* height: 62px; */
-            border: dashed #ededed 3px;
-            border-radius: 5px;
-            padding: 15px;
-            margin: 15px;
-            overflow: hidden;
-        }
+    .dark-mode body {
+        background-color: #121212; /* Dark background */
+        color: #e0e0e0; /* Light text */
+    }
+    
+    .dark-mode h1, 
+    .dark-mode h2, 
+    .dark-mode h3, 
+    .dark-mode h4, 
+    .dark-mode h5 {
+        color: #e0e0e0; /* Light text */
+    }
 
-        .data-warning {
-            background-color: #ffffc3;
-            /* display: inline-block; */
-            margin: auto;
-            position: relative;
-            padding: 15px;
-            text-align: center;
-        }
+    .dark-mode .mdl-layout__header {
+        background-color: #1f1f1f; /* Dark background */
+    }
 
-        .material-icons {
-            vertical-align: middle;
-            font-size: 19px;
-        }
+    .dark-mode .feature-tabs > div {
+        background-color: #2f2f2f; /* Dark background */
+    }
 
-        .nav-tab>.material-icons {
-            color: #0F9D58;
-        }
-    </style>
+    .dark-mode .feature-tabs > div:hover {
+        background-color: #3f3f3f; /* Slightly darker background on hover */
+    }
+
+    .dark-mode .data-warning {
+        background-color: #3f3f3f; /* Dark background */
+    }
+
+    .dark-mode .upload-area {
+        background-color: #2f2f2f; /* Dark background */
+        border: dashed #3f3f3f 3px; /* Dark border */
+    }
+
+    /* Additional styles for other elements in dark mode can be added here */
+    
+</style>
+    
 </head>
 
 
@@ -165,14 +194,14 @@
 
 
     <div id="app" class="mdl-layout--fixed-header">
-
+        
         <header class="mdl-layout__header">
             <div class="mdl-layout-icon">
                 <img class="logo" src="assets/icon.png">
             </div>
             <div class="mdl-layout__header-row">
-
                 <span class="mdl-layout-title">Video Intelligence API Visualiser</span>
+                <button id="darkModeToggle" onclick="toggleDarkMode()">Toggle Dark Mode</button>
             </div>
         </header>
 
@@ -492,7 +521,13 @@ Find links to script examples at the top right of the screen.")
 
 
     </script>
-
+    
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+    </script>
+        
 </body>
 
 </html>
